@@ -1,5 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Player } from 'src/app/core/classes/player.class';
+import { TankComponent } from 'src/app/core/components/tank/tank.component';
 import { GameConfig } from 'src/app/core/configs/game.config';
 import { WindEnum } from 'src/app/core/enums/wind.enum';
 import { playerInterface } from 'src/app/core/interfaces/player.interface';
@@ -10,6 +11,7 @@ import { playerInterface } from 'src/app/core/interfaces/player.interface';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent implements OnInit {
+  @ViewChild(TankComponent) Tank?:TankComponent;
   public players: Array<playerInterface>;
   public enemy: any;
   public maxPower: number;
@@ -23,9 +25,9 @@ export class GameComponent implements OnInit {
   private isSpaceBarPressed: boolean;
   private interval?: number;
 
-  @HostListener('document:keypress', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   handleKeyPressEvent(e: KeyboardEvent) {
-    this.pressKey(e);
+    this.keydown(e);
   }
 
   @HostListener('document:keyup', ['$event'])
@@ -89,23 +91,19 @@ export class GameComponent implements OnInit {
     }, 1000);
   }
 
-  public commandTank(e: KeyboardEvent): void {
-    // if (e.which === 37) {
-    //   this.playerTurn.moveTankLeft()
-    // } else if (e.which === 39) {
-    //   this.playerTurn.moveTankRight()
-    // } else if (e.which === 38) {
-    //   this.playerTurn.gun.rotateGunRight()
-    // } else if (e.which === 40) {
-    //   this.playerTurn.gun.rotateGunLeft()
-    // }
-  }
-
-  public pressKey(e: KeyboardEvent): void {
+  public keydown(e: KeyboardEvent): void {
     if (e.code === 'Space' && this.myTurn) {
       if (this.power < this.maxPower && this.power >= 0) {
         this.power += 1;
       }
+    } else if (e.code === 'ArrowLeft' && this.myTurn) {
+      this.Tank?.moveLeft();
+    } else if (e.code === 'ArrowRight' && this.myTurn) {
+      this.Tank?.moveRight();
+    } else if (e.code === 'ArrowUp' && this.myTurn) {
+      // this.playerTurn.gun.rotateGunRight()
+    } else if (e.code === 'ArrowDown' && this.myTurn) {
+      // this.playerTurn.gun.rotateGunLeft()
     }
   }
 

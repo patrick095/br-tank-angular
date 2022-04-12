@@ -19,4 +19,12 @@ export class TankComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public moveLeft(): void {
+    this.player.position.x -= 1;
+  }
+
+  public moveRight(): void {
+    this.player.position.x += 1;
+  }
+
 }
