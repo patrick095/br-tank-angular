@@ -10,10 +10,12 @@ import { playerInterface } from '../../interfaces/player.interface';
 export class TankComponent implements OnInit {
   @Input() enemy: playerInterface;
   @Input() player: playerInterface;
+  public gunAngle: number;
 
   constructor() { 
     this.player = new Player('', 0, '');
     this.enemy = new Player('', 1, '');
+    this.gunAngle = 0;
   }
 
   ngOnInit(): void {
@@ -27,4 +29,11 @@ export class TankComponent implements OnInit {
     this.player.position.x += 1;
   }
 
+  public upperGunAngle(): void {
+    this.gunAngle += 1;
+  }
+
+  public lowerGunAngle(): void {
+    this.gunAngle -= 1;
+  }
 }

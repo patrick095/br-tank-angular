@@ -100,10 +100,10 @@ export class GameComponent implements OnInit {
       this.Tank?.moveLeft();
     } else if (e.code === 'ArrowRight' && this.myTurn) {
       this.Tank?.moveRight();
-    } else if (e.code === 'ArrowUp' && this.myTurn) {
-      // this.playerTurn.gun.rotateGunRight()
-    } else if (e.code === 'ArrowDown' && this.myTurn) {
-      // this.playerTurn.gun.rotateGunLeft()
+    } else if (e.code === 'ArrowUp') {
+      this.Tank?.upperGunAngle();
+    } else if (e.code === 'ArrowDown') {
+      this.Tank?.lowerGunAngle();
     }
   }
 

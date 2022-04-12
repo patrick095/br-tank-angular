@@ -1,4 +1,4 @@
-<div class='gun' id={player.id}  style="left: 14px;">
+<div class='gun' id={player.id}  [style]="{ left: '14px', transform: 'rotate(' + angle + 'deg)' }">
     <div class='gun-cap'></div>
     <app-projectile *ngIf="shooting"></app-projectile>
 </div>
