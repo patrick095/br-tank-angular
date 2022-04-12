@@ -1,9 +1,12 @@
 <div
   class="row"
+  tabindex="0"
 >
   <div id="game">
     <div id="timer">
-      <p class="timer"></p>
+      <p class="timer">
+        {{ counter }}
+      </p>
     </div>
     <div id="wind">
       <p>Vento</p>
@@ -33,7 +36,9 @@
       <p id="tank-2-health"></p>
     </div>
     <div id="result">
-      <p class="result"></p>
+      <p class="result">
+        {{ myTurn ? 'Sua vez' : 'Vez do adversário' }}
+      </p>
     </div>
     <div id="angle">
       <p class="angle"></p>
@@ -47,7 +52,8 @@
   <div class="power-bar-container">
     <div class="power-bar">
       <h5>Press Spacebar to increment power</h5>
-      <div class="power-bar-fill"></div>
+      <div class="power-bar-fill" [style]="{ width: (this.power*100)/this.maxPower + '%' }"></div>
+      <div class="power-bar-lats-shoot" [style]="{ left: (this.lastShot*100)/this.maxPower + '%' }"></div>
     </div>
   </div>
 </div>

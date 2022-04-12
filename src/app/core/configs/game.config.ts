@@ -9,7 +9,7 @@ export class GameConfig {
 
     constructor() {
         this.countDown = 15;
-        this.maxPower = 100;
+        this.maxPower = 20;
         this.maxPlayers = 2;
         this.maxWindSpeed = 5;
         this.initialPositions = [{x:90, y: 0}, {x: 670, y: 0}];
