@@ -1,1 +1,25 @@
-<p>tank works!</p>
+<div
+  class="tank"
+  [id]="player.id"
+  [style]="{
+    left: player.position.x + 'px',
+    bottom: player.position.y + 'px',
+    backgroundColor: player.color
+  }"
+>
+  <div class="tank-body"></div>
+  <div class="tank-turret"></div>
+  <div class="tank-gun">
+    <app-gun></app-gun>
+  </div>
+  <div class="cover">
+    <div class="wheel-1">
+      <div class="rim-1"></div>
+      <div class="rim-2"></div>
+    </div>
+    <div class="wheel-2">
+      <div class="rim-1"></div>
+      <div class="rim-2"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div
+  class="row"
+>
+  <div id="game">
+    <div id="timer">
+      <p class="timer"></p>
+    </div>
+    <div id="wind">
+      <p>Vento</p>
+      <p class="wind-speed">{{ windSpeed }}</p>
+    </div>
+    <div id="wind-pic">
+      <div id="wind-arrow">
+        <img
+          src="/assets/seta-vento.png"
+          alt="vento"
+          width="25px"
+          height="50px"
+          [style]="{ transform: 'rotate(' + windAngle + 'deg)' }"
+        />
+        <div id="wind-arrow-tip"></div>
+      </div>
+    </div>
+    <div id="status">
+      <p class="player"></p>
+    </div>
+    <div id="player-1-status">
+      <p class="name">Red Baron</p>
+      <p id="tank-1-health"></p>
+    </div>
+    <div id="player-2-status">
+      <p class="name">Terminator</p>
+      <p id="tank-2-health"></p>
+    </div>
+    <div id="result">
+      <p class="result"></p>
+    </div>
+    <div id="angle">
+      <p class="angle"></p>
+    </div>
+    <app-tank
+        *ngFor="let player of players"
+        [enemy]="enemy"
+        [player]="player"
+    ></app-tank>
+  </div>
+  <div class="power-bar-container">
+    <div class="power-bar">
+      <h5>Press Spacebar to increment power</h5>
+      <div class="power-bar-fill"></div>
+    </div>
+  </div>
+</div>
+<div class="row center-align">
+  <div id="instructions">
+    <p>Left and Right Arrow Keys: Move your tank left and right</p>
+    <p>Up and Down Arrow Keys: Move your tank&apos;s gun angle</p>
+    <p>Space Bar: Shoot your gun</p>
+    <p>
+      Objective: Hit your opponent&apos;s tank to deplete his HP before your
+      opponent does it first!
+    </p>
+  </div>
+</div>

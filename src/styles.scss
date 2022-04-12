@@ -1,0 +1,219 @@
+#game {
+  background-color: #111;
+  height: 500px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  width: 800px;
+}
+
+#wind {
+  background: teal;
+  bottom: 400px;
+  left: 280px;
+  height: 80px;
+  width: 100px;
+  position: absolute;
+  text-align: center;
+}
+
+#wind-pic {
+  background: teal;
+  bottom: 400px;
+  left: 420px;
+  height: 80px;
+  width: 100px;
+  position: absolute;
+  text-align: center;
+}
+
+#wind-arrow {
+  height: 50px;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  left: 27px;
+  bottom: 15px;
+  position: absolute;
+}
+
+#wind-arrow-tip {
+  display: none;
+  background: white;
+  height: 10px;
+  width: 10px;
+  left: -2px;
+  bottom: 48px;
+  position: absolute;
+}
+
+#status {
+  background: green;
+  bottom: 350px;
+  left: 300px;
+  height: 30px;
+  width: 200px;
+  position: absolute;
+  text-align: center;
+}
+
+.angle {
+  left: 350px;
+  bottom: 300px;
+  height: 20px;
+  width: 100px;
+  background: white;
+  position: absolute;
+}
+
+.result {
+  background: blue;
+  bottom: 270px;
+  left: 350px;
+  position: absolute;
+  height: 20px;
+  width: 100px;
+}
+
+.timer {
+  background: white;
+  bottom: 240px;
+  left: 350px;
+  position: absolute;
+  height: 20px;
+  width: 100px;
+}
+
+p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#player-1-status {
+  height: 50px;
+  width: 100px;
+  left: 20px;
+  bottom: 430px;
+  background: yellow;
+  position: absolute;
+}
+
+#player-2-status {
+  height: 50px;
+  width: 100px;
+  left: 680px;
+  bottom: 430px;
+  background: purple;
+  position: absolute;
+}
+
+.tank {
+  height: 20px;
+  width: 40px;
+  bottom: 0px;
+  position: absolute;
+}
+
+.cover {
+  background: black;
+  position: absolute;
+  height: 5px;
+  width: 40px;
+  bottom: 0px;
+}
+
+.wheel-1 {
+  border-radius: 5px;
+  background: grey;
+  position: absolute;
+  height: 11px;
+  width: 11px;
+  bottom: 0px;
+}
+
+.wheel-2 {
+  border-radius: 5px;
+  background: grey;
+  position: absolute;
+  height: 11px;
+  width: 11px;
+  bottom: 0px;
+  left: 29px;
+}
+
+.rim-1 {
+  background: blue;
+  position: absolute;
+  height: 1px;
+  width: 11px;
+  bottom: 5px;
+}
+
+.rim-2 {
+  background: blue;
+  position: absolute;
+  height: 1px;
+  width: 11px;
+  bottom: 5px;
+  transform: rotate(90deg)
+}
+
+
+.gun {
+  width: 12px;
+  height: 30px;
+  background: blue;
+  bottom: 20px;
+  position: absolute;
+  display: block;
+  transform-origin: 50% 100%;
+}
+
+.gun-cap {
+  background: blue;
+  height: 12px;
+  width: 12px;
+  border-radius: 7px;
+  bottom: -6px;
+  position: absolute;
+}
+
+#projectile {
+  background: white;
+  height: 20px;
+  width: 20px;
+  border-radius: 50px;
+  position: absolute;
+  display: block;
+}
+
+.power-bar-container {
+  height: 50px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  width: 800px;
+}
+
+.power-bar {
+  background: #84d0fc;
+  padding: 5px;
+  border: 2px solid #258dc9;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  color: aliceblue;
+}
+
+.power-bar-fill {
+  background: #11a035;
+  height: 100%;
+  width: 1%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

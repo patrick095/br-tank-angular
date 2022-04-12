@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TankComponent } from './tank.component';
+import { GunModule } from '../gun/gun.module';
 
 
 
@@ -9,7 +10,11 @@ import { TankComponent } from './tank.component';
     TankComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    GunModule
+  ],
+  exports: [
+    TankComponent
   ]
 })
 export class TankModule { }

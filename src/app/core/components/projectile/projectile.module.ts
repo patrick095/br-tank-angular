@@ -10,6 +10,9 @@ import { ProjectileComponent } from './projectile.component';
   ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    ProjectileComponent
   ]
 })
 export class ProjectileModule { }
