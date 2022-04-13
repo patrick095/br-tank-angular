@@ -4,6 +4,7 @@ import { GameComponent } from './game.component';
 import { TankModule } from 'src/app/core/components/tank/tank.module';
 import { GameRoutingModule } from './game.routing.module';
 import { GameConfig } from 'src/app/core/configs/game.config';
+import { GameService } from '../../services/game.service';
 
 
 
@@ -19,6 +20,6 @@ import { GameConfig } from 'src/app/core/configs/game.config';
   exports: [
     GameComponent
   ],
-  providers: [GameConfig],
+  providers: [GameConfig, GameService],
 })
 export class GameModule { }

@@ -3,7 +3,9 @@ import { Player } from 'src/app/core/classes/player.class';
 import { TankComponent } from 'src/app/core/components/tank/tank.component';
 import { GameConfig } from 'src/app/core/configs/game.config';
 import { WindEnum } from 'src/app/core/enums/wind.enum';
+import { GameStartInterface } from 'src/app/core/interfaces/game.interface';
 import { playerInterface } from 'src/app/core/interfaces/player.interface';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-game',
@@ -22,6 +24,7 @@ export class GameComponent implements OnInit {
   public power: number;
   public lastShot: number;
   public myTurn: boolean;
+  public gameData?: GameStartInterface;
   private isSpaceBarPressed: boolean;
   private interval?: number;
 
@@ -35,7 +38,7 @@ export class GameComponent implements OnInit {
     this.keyUp(e);
   }
 
-  constructor(private config: GameConfig) {
+  constructor(private config: GameConfig, private server: GameService) {
     this.players = [];
     this.enemy = {};
     this.isSpaceBarPressed = false;
@@ -54,19 +57,19 @@ export class GameComponent implements OnInit {
   }
 
   public startGame(): void {
-    this.players = [
-      new Player('player 1', 0, 'red'),
-      new Player('player 2', 1, 'green'),
-    ];
-    this.startTurn();
+    this.server.startGame(new Player('player 1', 0, 'green')).subscribe((data) => {
+      this.gameData = data;
+      this.players = data.players;
+      this.setWind(data.wind.angle, data.wind.speed);
+      this.turn = data.turn;
+      this.myTurn = data.isMyTurn
+      this.startTurn(); 
+    });
   }
 
-  private setWind(): void {
-    this.windAngle =
-      Math.round(Math.random()) === 0 ? WindEnum.LEFT : WindEnum.RIGHT;
-    this.windSpeed = parseFloat(
-      (Math.random() * this.config.MaxWindSpeed).toFixed(1)
-    );
+  private setWind(angle: number, speed: number): void {
+    this.windAngle = angle;
+    this.windSpeed = speed;
   }
 
   private setMyTurn(): void {
@@ -80,7 +83,6 @@ export class GameComponent implements OnInit {
   }
 
   private startTurn(): void {
-    this.setWind();
     this.setMyTurn();
     this.interval = window.setInterval(() => {
       this.countDown();
@@ -109,7 +111,7 @@ export class GameComponent implements OnInit {
 
   public keyUp(e: KeyboardEvent): void {
     if (e.code === 'Space' && this.myTurn) {
-      // this.playerTurn.gun.shoot(this.power)
+      this.Tank?.Gun?.shoot(this.power);
       this.lastShot = this.power;
       this.power = 0;
       clearInterval(this.interval);

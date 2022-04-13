@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GunComponent } from './gun.component';
 import { ProjectileModule } from '../projectile/projectile.module';
+import { GameConfig } from '../../configs/game.config';
 
 
 
@@ -15,6 +16,7 @@ import { ProjectileModule } from '../projectile/projectile.module';
   ],
   exports: [
     GunComponent
-  ]
+  ],
+  providers: [GameConfig],
 })
 export class GunModule { }

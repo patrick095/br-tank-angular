@@ -6,13 +6,19 @@ export class GameConfig {
     private maxPlayers: number;
     private maxWindSpeed: number;
     private initialPositions: Array<positionInterface>;
+    private tankSize: number;
 
     constructor() {
         this.countDown = 15;
-        this.maxPower = 20;
+        this.maxPower = 50;
         this.maxPlayers = 2;
         this.maxWindSpeed = 5;
         this.initialPositions = [{x:90, y: 0}, {x: 670, y: 0}];
+        this.tankSize = 14;
+    }
+
+    public get TankSize(): number {
+        return this.tankSize;
     }
 
     public get CountDown(): number {

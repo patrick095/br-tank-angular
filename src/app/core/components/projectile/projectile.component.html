@@ -1,1 +1,1 @@
-<div id="projectile" style="bottom: 1px; left: 4px;"></div>
+<div *ngIf="shooting" id="projectile" [style]="{ bottom: bottom + 'px', left: relLeft + 'px' }"></div>

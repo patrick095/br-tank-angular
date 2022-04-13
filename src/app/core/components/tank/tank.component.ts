@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Player } from '../../classes/player.class';
+import { GameStartInterface } from '../../interfaces/game.interface';
 import { playerInterface } from '../../interfaces/player.interface';
+import { GunComponent } from '../gun/gun.component';
 
 @Component({
   selector: 'app-tank',
@@ -8,8 +10,10 @@ import { playerInterface } from '../../interfaces/player.interface';
   styleUrls: ['./tank.component.scss']
 })
 export class TankComponent implements OnInit {
+  @ViewChild(GunComponent) Gun?:GunComponent;
   @Input() enemy: playerInterface;
   @Input() player: playerInterface;
+  @Input() game?: GameStartInterface;
   public gunAngle: number;
 
   constructor() { 
