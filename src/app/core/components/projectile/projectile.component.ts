@@ -114,10 +114,12 @@ export class ProjectileComponent implements OnInit {
     const colisionWithMe = this.checkHitPlayer(this.position);
     const colisionWithEnemy =  this.checkHitPlayer(this.enemyPosition);
 
+    console.log(this.absLeft, this.absRight, this.enemyPosition.x)
     if (colisionWithMe) {
       isColision = true;
       this.animateHit(this.userId);
     } else if (colisionWithEnemy) {
+      isColision = true;
       this.animateHit(this.enemyId);
     } else {
       isColision = this.bottom <= -20;
@@ -144,7 +146,7 @@ export class ProjectileComponent implements OnInit {
       this.absLeft <= absRightPlayer &&
       this.bottom <= 0) ||
     (this.absRight <= absRightPlayer &&
-      this.absRight <= absLeftPlayer &&
+      this.absRight >= absLeftPlayer &&
       this.bottom <= 0);
   }
 
