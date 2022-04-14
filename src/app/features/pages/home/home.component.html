@@ -1,0 +1,10 @@
+<div class="home">
+    <h1>Welcome to Br Tank!</h1>
+    <div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <label for="user">Digite seu nome:</label>
+            <input type="text" placeholder="nome" name="user" id="user" formControlName="user" />
+            <button type="submit">Iniciar partida</button>
+        </form>
+    </div>
+</div>

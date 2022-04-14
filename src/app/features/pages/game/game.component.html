@@ -1,6 +1,7 @@
 <div
   class="row"
   tabindex="0"
+  *ngIf="players.length > 1"
 >
   <div id="game">
     <div id="timer">
@@ -28,11 +29,11 @@
       <p class="player"></p>
     </div>
     <div id="player-1-status">
-      <p class="name">Player 1</p>
+      <p class="name">{{ players[0].name }}</p>
       <p id="tank-1-health"></p>
     </div>
     <div id="player-2-status">
-      <p class="name">Terminator</p>
+      <p class="name">{{ players[1].name }}</p>
       <p id="tank-2-health"></p>
     </div>
     <div id="result">

@@ -55,9 +55,10 @@ export class GameComponent implements OnInit {
   }
 
   public startGame(): void {
-    this.server.startGame(new Player('player 1', 0, 'green')).subscribe((data) => {
+    this.server.startGame().subscribe((data) => {
       this.gameData = data;
       this.players = data.players;
+      console.log(data.players)
       this.setWind(data.wind.angle, data.wind.speed);
       this.turn = data.turn;
       this.myTurn = data.isMyTurn

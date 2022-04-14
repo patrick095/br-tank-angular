@@ -22,6 +22,7 @@ export class TankComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.player)
   }
 
   public moveLeft(): void {

@@ -3,10 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'game',
     loadChildren: () =>
       import('./features/pages/game/game.module').then((m) => m.GameModule),
   },
+  {
+    path: '',
+    loadChildren: () =>
+      import('./features/pages/home/home.module').then((m) => m.HomeModule),
+  }
 ];
 
 @NgModule({
