@@ -45,7 +45,6 @@
     </div>
     <app-tank
         *ngFor="let player of players"
-        [enemy]="enemy"
         [player]="player"
         [game]="gameData"
         (angle)="gunAngle = $event"

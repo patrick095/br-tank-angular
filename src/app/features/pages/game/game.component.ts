@@ -15,7 +15,6 @@ import { GameService } from '../../services/game.service';
 export class GameComponent implements OnInit {
   @ViewChild(TankComponent) Tank?:TankComponent;
   public players: Array<playerInterface>;
-  public enemy: any;
   public maxPower: number;
   public turn: number;
   public counter: number;
@@ -26,7 +25,6 @@ export class GameComponent implements OnInit {
   public myTurn: boolean;
   public gunAngle: number;
   public gameData?: GameStartInterface;
-  private isSpaceBarPressed: boolean;
   private interval?: number;
 
   @HostListener('document:keydown', ['$event'])
@@ -41,8 +39,6 @@ export class GameComponent implements OnInit {
 
   constructor(private config: GameConfig, private server: GameService) {
     this.players = [];
-    this.enemy = {};
-    this.isSpaceBarPressed = false;
     this.maxPower = this.config.MaxPower;
     this.turn = 0;
     this.windAngle = 0;
@@ -113,11 +109,15 @@ export class GameComponent implements OnInit {
 
   public keyUp(e: KeyboardEvent): void {
     if (e.code === 'Space' && this.myTurn) {
-      this.Tank?.Gun?.shoot(this.power);
       this.lastShot = this.power;
-      this.power = 0;
-      clearInterval(this.interval);
-      this.nextTurn();
+      this.server.shoot({ id: this.players[0].id, power: this.power, angle: this.gunAngle}).subscribe((data) => {
+        if (data) {
+          this.Tank?.Gun?.shoot(data);
+          this.power = 0;
+          clearInterval(this.interval);
+          this.nextTurn();
+        }
+      });
     }
   }
 

@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Player } from 'src/app/core/classes/player.class';
 import { GameConfig } from 'src/app/core/configs/game.config';
 import { WindEnum } from 'src/app/core/enums/wind.enum';
-import { GameStartInterface } from 'src/app/core/interfaces/game.interface';
+import { GameStartInterface, GunShootInterface, shootInterface } from 'src/app/core/interfaces/game.interface';
 import { playerInterface } from 'src/app/core/interfaces/player.interface';
 
 @Injectable({
@@ -35,4 +35,20 @@ export class GameService {
     };
     return of(response);
   }
+
+  public shoot({id, angle, power}: shootInterface): Observable<GunShootInterface | null> {
+    const player = this.players.find(p => p.id === id);
+    
+    if (player) {
+      const response = {
+        angle,
+        power,
+        playerPosition: player.position,
+      }
+      return of(response);
+    }
+
+    return of(null);
+  }
+
 }

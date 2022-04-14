@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameConfig } from '../../configs/game.config';
-import { GameStartInterface } from '../../interfaces/game.interface';
+import {
+  GameStartInterface,
+  GunShootInterface,
+} from '../../interfaces/game.interface';
 import { positionInterface } from '../../interfaces/player.interface';
 
 @Component({
@@ -9,10 +12,10 @@ import { positionInterface } from '../../interfaces/player.interface';
   styleUrls: ['./projectile.component.scss'],
 })
 export class ProjectileComponent implements OnInit {
-  @Input() public position: positionInterface;
   @Input() public game: GameStartInterface;
-  @Input() public gunAngle: number = 0;
-  @Input() public power: number = 0;
+  public position: positionInterface;
+  public gunAngle: number = 0;
+  public power: number = 0;
   public absLeft: number = 0;
   public absRight: number = 0;
   public bottom: number = 20;
@@ -42,19 +45,29 @@ export class ProjectileComponent implements OnInit {
       y: 0,
     };
     this.shooting = false;
-    this.absLeft = this.position.x + this.config.TankSize;
-    this.absRight = this.absLeft + 20;
   }
 
   ngOnInit(): void {}
 
-  public fire(power: number) {
-    this.resetProjectile();
-    this.angle = (Math.PI * (90 - this.gunAngle)) / 180;
-    this.power = Math.round(power / 2);
+  public fire(gunShoot: GunShootInterface) {
+    console.log(gunShoot)
+    const { power, angle, playerPosition } = gunShoot;
+
+    this.position = playerPosition;
+    this.angle = (Math.PI * (90 - angle)) / 180;
     this.shooting = true;
+
+    this.resetProjectile();
+    
+    this.power = Math.round(power / 2);
+
     this.calculateWind();
     window.requestAnimationFrame(this.bothMovement.bind(this));
+  }
+
+  private setAbsPosition() {
+    this.absLeft = this.position.x + this.config.TankSize;
+    this.absRight = this.absLeft + 20;
   }
 
   private calculateWind(): void {
@@ -64,14 +77,15 @@ export class ProjectileComponent implements OnInit {
     this.windXVelocity =
       Math.cos((this.game.wind.angle * Math.PI) / 180) * this.game.wind.speed;
     this.yVelocity = Math.sin(this.angle) * this.power + this.windYVelocity;
-    this.xVelocity = Math.cos(this.angle) * this.power + this.windXVelocity * (this.windSide === 'left' ? -30 : 30);
+    this.xVelocity =
+      Math.cos(this.angle) * this.power +
+      this.windXVelocity * (this.windSide === 'left' ? -30 : 30);
   }
 
   private resetProjectile() {
     this.power = 0;
     this.bottom = 20;
-    this.absLeft = this.position.x + this.config.TankSize;
-    this.absRight = this.absLeft + 20;
+    this.setAbsPosition();
     this.timeInAir = 0;
     this.relLeft = 0;
   }
@@ -80,9 +94,8 @@ export class ProjectileComponent implements OnInit {
     this.gravity = 15 * this.timeInAir;
     this.bottom += this.yVelocity - this.gravity;
     this.relLeft += this.xVelocity;
-    this.absLeft = this.position.x + this.relLeft;
-    this.absRight = this.absLeft + 20;
-    this.timeInAir += 1 / 50;
+    this.setAbsPosition();
+    this.timeInAir += 1 / 60;
     this.shooting = !this.checkCollision();
   }
 
@@ -91,16 +104,6 @@ export class ProjectileComponent implements OnInit {
   }
 
   private bothMovement() {
-    // if (this.checkCollision()) {
-    //   this.proj.remove()
-    //   if (this.gun.tank.hp === 0) {
-    //     this.gun.tank.game.endGame()
-    //   } else if (this.gun.tank.enemyTank.hp === 0) {
-    //     this.gun.tank.game.endGame()
-    //   } else {
-    //     this.gun.tank.game.counter = 0
-    //   }
-    // } else {
     if (this.shooting) {
       this.updateProjectile();
       window.requestAnimationFrame(this.bothMovement.bind(this));
