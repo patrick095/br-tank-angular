@@ -14,8 +14,11 @@ export interface GameWindInterface {
 
 export interface GunShootInterface {
   playerPosition: positionInterface;
+  enemyPosition: positionInterface;
   angle: number;
   power: number;
+  id: string;
+  enemyId: string;
 }
 
 export interface shootInterface {

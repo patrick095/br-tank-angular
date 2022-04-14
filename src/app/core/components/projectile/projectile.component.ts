@@ -29,6 +29,9 @@ export class ProjectileComponent implements OnInit {
   private yVelocity: number = 0;
   private xVelocity: number = 0;
   private windSide?: 'left' | 'right';
+  private enemyPosition: positionInterface;
+  private userId: string = '';
+  private enemyId: string = '';
 
   constructor(private config: GameConfig) {
     this.game = {
@@ -44,21 +47,27 @@ export class ProjectileComponent implements OnInit {
       x: 0,
       y: 0,
     };
+    this.enemyPosition = {
+      x: 0,
+      y: 0,
+    };
     this.shooting = false;
   }
 
   ngOnInit(): void {}
 
   public fire(gunShoot: GunShootInterface) {
-    console.log(gunShoot)
-    const { power, angle, playerPosition } = gunShoot;
+    const { power, angle, playerPosition, enemyPosition, id, enemyId } = gunShoot;
 
     this.position = playerPosition;
+    this.enemyPosition = enemyPosition;
+    this.userId = id;
+    this.enemyId = enemyId;
     this.angle = (Math.PI * (90 - angle)) / 180;
     this.shooting = true;
 
     this.resetProjectile();
-    
+
     this.power = Math.round(power / 2);
 
     this.calculateWind();
@@ -66,7 +75,7 @@ export class ProjectileComponent implements OnInit {
   }
 
   private setAbsPosition() {
-    this.absLeft = this.position.x + this.config.TankSize;
+    this.absLeft = this.position.x + this.config.TankSize + this.relLeft;
     this.absRight = this.absLeft + 20;
   }
 
@@ -100,7 +109,43 @@ export class ProjectileComponent implements OnInit {
   }
 
   private checkCollision() {
-    return this.bottom < -20;
+    let isColision = false;
+
+    const colisionWithMe = this.checkHitPlayer(this.position);
+    const colisionWithEnemy =  this.checkHitPlayer(this.enemyPosition);
+
+    if (colisionWithMe) {
+      isColision = true;
+      this.animateHit(this.userId);
+    } else if (colisionWithEnemy) {
+      this.animateHit(this.enemyId);
+    } else {
+      isColision = this.bottom <= -20;
+    }
+    return isColision;
+  }
+
+  private animateHit(id: string): void {
+    const status = document.getElementById('status');
+    const player = document.getElementById(id)
+    status?.classList.add('hitPlayer');
+    player?.classList.add('hitPlayer');
+    setTimeout(() => {
+      status?.classList.remove('hitPlayer');
+      player?.classList.remove('hitPlayer');
+    }, 1500);
+  }
+
+  private checkHitPlayer(playerPosition: positionInterface): boolean {
+    const absLeftPlayer = playerPosition.x;
+    const absRightPlayer = absLeftPlayer + 40;
+
+    return (this.absLeft >= absLeftPlayer &&
+      this.absLeft <= absRightPlayer &&
+      this.bottom <= 0) ||
+    (this.absRight <= absRightPlayer &&
+      this.absRight <= absLeftPlayer &&
+      this.bottom <= 0);
   }
 
   private bothMovement() {

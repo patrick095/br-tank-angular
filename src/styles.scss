@@ -226,3 +226,22 @@ p {
   top: 0;
   left: 0;
 }
+
+.hitPlayer {
+  animation: hitPlayerAnimation 1s linear;
+}
+
+@keyframes hitPlayerAnimation {
+  0% {
+    background: #ff0000;
+  }
+  25% {
+    background: #000000;
+  }
+  75% {
+    background: #ff0000;
+  }
+  100% {
+    background: #000000;
+  }
+}
