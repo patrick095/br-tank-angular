@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Player } from '../../classes/player.class';
 import { GameStartInterface } from '../../interfaces/game.interface';
 import { playerInterface } from '../../interfaces/player.interface';
@@ -14,6 +15,7 @@ export class TankComponent implements OnInit {
   @Input() enemy: playerInterface;
   @Input() player: playerInterface;
   @Input() game?: GameStartInterface;
+  @Output() angle: EventEmitter<number> = new EventEmitter<number>();
   public gunAngle: number;
 
   constructor() { 
@@ -35,9 +37,11 @@ export class TankComponent implements OnInit {
 
   public upperGunAngle(): void {
     this.gunAngle += 1;
+    this.angle.next(this.gunAngle);
   }
 
   public lowerGunAngle(): void {
     this.gunAngle -= 1;
+    this.angle.next(this.gunAngle);
   }
 }

@@ -28,7 +28,7 @@
       <p class="player"></p>
     </div>
     <div id="player-1-status">
-      <p class="name">Red Baron</p>
+      <p class="name">Player 1</p>
       <p id="tank-1-health"></p>
     </div>
     <div id="player-2-status">
@@ -41,13 +41,14 @@
       </p>
     </div>
     <div id="angle">
-      <p class="angle"></p>
+      <p class="angle">{{ gunAngle }}</p>
     </div>
     <app-tank
         *ngFor="let player of players"
         [enemy]="enemy"
         [player]="player"
         [game]="gameData"
+        (angle)="gunAngle = $event"
     ></app-tank>
   </div>
   <div class="power-bar-container">

@@ -24,6 +24,7 @@ export class GameComponent implements OnInit {
   public power: number;
   public lastShot: number;
   public myTurn: boolean;
+  public gunAngle: number;
   public gameData?: GameStartInterface;
   private isSpaceBarPressed: boolean;
   private interval?: number;
@@ -50,6 +51,7 @@ export class GameComponent implements OnInit {
     this.lastShot = 0;
     this.counter = this.config.CountDown;
     this.myTurn = false;
+    this.gunAngle = 0;
   }
 
   ngOnInit(): void {
