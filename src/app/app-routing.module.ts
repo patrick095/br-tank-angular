@@ -11,6 +11,11 @@ const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./features/pages/home/home.module').then((m) => m.HomeModule),
+  },
+  {
+    path: 'dash',
+    loadChildren: () =>
+      import('./features/pages/dash/dash.module').then((m) => m.DashModule),
   }
 ];
 

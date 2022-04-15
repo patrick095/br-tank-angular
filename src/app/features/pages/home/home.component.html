@@ -2,9 +2,12 @@
     <h1>Welcome to Br Tank!</h1>
     <div>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <label for="user">Digite seu nome:</label>
-            <input type="text" placeholder="nome" name="user" id="user" formControlName="user" />
-            <button type="submit">Iniciar partida</button>
+            <h2>Entrar</h2>
+            <label for="user">Usuário:</label>
+            <input type="text" placeholder="nome" name="username" id="username" formControlName="username" />
+            <label for="password">Senha:</label>
+            <input type="password" placeholder="senha" name="password" id="password" formControlName="password" />
+            <button type="submit">Entrar</button>
         </form>
     </div>
 </div>

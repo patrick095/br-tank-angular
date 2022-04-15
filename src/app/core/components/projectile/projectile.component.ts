@@ -22,10 +22,7 @@ export class ProjectileComponent implements OnInit {
   public shooting: boolean;
   public relLeft = 0;
   public angle: number = 0;
-  private gravity = 0;
   private timeInAir = 0;
-  private windXVelocity: number = 0;
-  private windYVelocity: number = 0;
   private yVelocity: number = 0;
   private xVelocity: number = 0;
   private windSide?: 'left' | 'right';
@@ -57,7 +54,8 @@ export class ProjectileComponent implements OnInit {
   ngOnInit(): void {}
 
   public fire(gunShoot: GunShootInterface) {
-    const { power, angle, playerPosition, enemyPosition, id, enemyId } = gunShoot;
+    const { power, angle, playerPosition, enemyPosition, id, enemyId } =
+      gunShoot;
 
     this.position = playerPosition;
     this.enemyPosition = enemyPosition;
@@ -68,7 +66,7 @@ export class ProjectileComponent implements OnInit {
 
     this.resetProjectile();
 
-    this.power = power / 2;
+    this.power = 15;
 
     this.calculateWind();
     requestAnimationFrame(this.bothMovement.bind(this));
@@ -81,14 +79,12 @@ export class ProjectileComponent implements OnInit {
 
   private calculateWind(): void {
     this.windSide = this.game.wind.angle > 90 ? 'left' : 'right';
-    this.windYVelocity =
+    const windYVelocity =
       Math.sin((this.game.wind.angle * Math.PI) / 180) * this.game.wind.speed;
-    this.windXVelocity =
+    const windXVelocity =
       Math.cos((this.game.wind.angle * Math.PI) / 180) * this.game.wind.speed;
-    this.yVelocity = Math.sin(this.angle) * this.power + this.windYVelocity;
-    this.xVelocity =
-      Math.cos(this.angle) * this.power +
-      this.windXVelocity * (this.windSide === 'left' ? -30 : 30);
+    this.yVelocity = Math.sin(this.angle) * this.power + windYVelocity;
+    this.xVelocity = Math.cos(this.angle) * this.power + windXVelocity;
   }
 
   private resetProjectile() {
@@ -100,11 +96,11 @@ export class ProjectileComponent implements OnInit {
   }
 
   private updateProjectile() {
-    this.gravity = 15 * this.timeInAir;
-    this.bottom += this.yVelocity - this.gravity;
+    this.timeInAir += 1 / 60;
+    const gravity = 15 * this.timeInAir;
+    this.bottom += this.yVelocity - gravity;
     this.relLeft += this.xVelocity;
     this.setAbsPosition();
-    this.timeInAir += 1 / 60;
     this.shooting = !this.checkCollision();
   }
 
@@ -112,7 +108,7 @@ export class ProjectileComponent implements OnInit {
     let isColision = false;
 
     const colisionWithMe = this.checkHitPlayer(this.position);
-    const colisionWithEnemy =  this.checkHitPlayer(this.enemyPosition);
+    const colisionWithEnemy = this.checkHitPlayer(this.enemyPosition);
 
     if (colisionWithMe) {
       isColision = true;
@@ -128,7 +124,7 @@ export class ProjectileComponent implements OnInit {
 
   private animateHit(id: string): void {
     const status = document.getElementById('status');
-    const player = document.getElementById(id)
+    const player = document.getElementById(id);
     status?.classList.add('hitPlayer');
     player?.classList.add('hitPlayer');
     setTimeout(() => {
@@ -141,12 +137,14 @@ export class ProjectileComponent implements OnInit {
     const absLeftPlayer = playerPosition.x;
     const absRightPlayer = absLeftPlayer + 40;
 
-    return (this.absLeft >= absLeftPlayer &&
-      this.absLeft <= absRightPlayer &&
-      this.bottom <= 0) ||
-    (this.absRight <= absRightPlayer &&
-      this.absRight >= absLeftPlayer &&
-      this.bottom <= 0);
+    return (
+      (this.absLeft >= absLeftPlayer &&
+        this.absLeft <= absRightPlayer &&
+        this.bottom <= 0) ||
+      (this.absRight <= absRightPlayer &&
+        this.absRight >= absLeftPlayer &&
+        this.bottom <= 0)
+    );
   }
 
   private bothMovement() {

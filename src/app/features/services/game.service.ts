@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GameConfig } from 'src/app/core/configs/game.config';
 import { GameStartInterface, GunShootInterface, shootInterface } from 'src/app/core/interfaces/game.interface';
 import { HttpClient } from '@angular/common/http';
+import { Socket } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
+import { socketError } from 'src/app/core/interfaces/server.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  private url = 'https://br-tank.herokuapp.com';
+  private url = environment.ApiUrl;
+  public onlinePlayers = this.socketIo.fromEvent<Array<string>>('onlinePlayers');
+  public error = this.socketIo.fromEvent<socketError>('error');
+  public socket: Socket;
 
-  constructor(private config: GameConfig, private http: HttpClient) {
+  constructor(private http: HttpClient, private socketIo: Socket) {
+    this.socket = socketIo;
   }
 
   public startGame(): Observable<GameStartInterface> {
     return this.http.get<GameStartInterface>(`${this.url}/start-game`)
-    
+  }
+
+  public sendStatusOnline(id: string, username: string): void {
+    this.socket.emit('id', {id, username});
   }
 
   public shoot({id, angle, power}: shootInterface): Observable<GunShootInterface | null> {

@@ -7,11 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { GameService } from '../../services/game.service';
 import { RouterModule } from '@angular/router';
 import { GameConfig } from 'src/app/core/configs/game.config';
+import { UserService } from '../../services/user.service';
+import { StorageUtils } from 'src/app/core/utils/storage.utils';
 
 @NgModule({
   declarations: [HomeComponent],
   imports: [CommonModule, HomeRoutingModule, ReactiveFormsModule, RouterModule],
   exports: [HomeComponent],
-  providers: [SigninForm, GameService, GameConfig],
+  providers: [SigninForm, GameService, GameConfig, UserService, StorageUtils],
 })
 export class HomeModule {}
