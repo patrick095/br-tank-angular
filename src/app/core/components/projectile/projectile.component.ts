@@ -68,10 +68,10 @@ export class ProjectileComponent implements OnInit {
 
     this.resetProjectile();
 
-    this.power = Math.round(power / 2);
+    this.power = power / 2;
 
     this.calculateWind();
-    window.requestAnimationFrame(this.bothMovement.bind(this));
+    requestAnimationFrame(this.bothMovement.bind(this));
   }
 
   private setAbsPosition() {
@@ -114,7 +114,6 @@ export class ProjectileComponent implements OnInit {
     const colisionWithMe = this.checkHitPlayer(this.position);
     const colisionWithEnemy =  this.checkHitPlayer(this.enemyPosition);
 
-    console.log(this.absLeft, this.absRight, this.enemyPosition.x)
     if (colisionWithMe) {
       isColision = true;
       this.animateHit(this.userId);
@@ -153,7 +152,7 @@ export class ProjectileComponent implements OnInit {
   private bothMovement() {
     if (this.shooting) {
       this.updateProjectile();
-      window.requestAnimationFrame(this.bothMovement.bind(this));
+      requestAnimationFrame(this.bothMovement.bind(this));
     }
   }
 }

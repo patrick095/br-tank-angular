@@ -21,9 +21,7 @@ export class TankComponent implements OnInit {
     this.gunAngle = 0;
   }
 
-  ngOnInit(): void {
-    console.log(this.player)
-  }
+  ngOnInit(): void {}
 
   public moveLeft(): void {
     this.player.position.x -= 1;
