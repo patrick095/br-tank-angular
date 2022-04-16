@@ -3,11 +3,16 @@
     <div>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <h2>Entrar</h2>
-            <label for="user">Usuário:</label>
-            <input type="text" placeholder="nome" name="username" id="username" formControlName="username" />
-            <label for="password">Senha:</label>
-            <input type="password" placeholder="senha" name="password" id="password" formControlName="password" />
-            <button type="submit">Entrar</button>
+            <div class="mb-3">
+                <label class="form-label" for="user">Usuário:</label>
+                <input class="form-control" type="text" placeholder="nome" name="username" id="username" formControlName="username" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Senha:</label>
+                <input class="form-control" type="password" placeholder="senha" name="password" id="password" formControlName="password" />
+            </div>
+            <button class="btn btn-primary mb-3" type="submit">Entrar</button>
+            <span>Não tem conta? <a href="#">Cadastre-se aqui</a></span>
         </form>
     </div>
 </div>

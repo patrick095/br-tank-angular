@@ -1,0 +1,127 @@
+    #players-online {
+        position: absolute;
+        left: 32px;
+        top: 0px;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    #salas {
+        position: absolute;
+        left: 265px;
+        top: 0px;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .players {
+        height: 540px;
+        width: 200px;
+        padding: 16px;
+        background-color: #ebe9e9;
+        border-radius: 8px;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.212);
+        grid-area: players;
+
+        .list {
+            width: 100%;
+
+            &__player {
+                width: 100%;
+                padding: 4px;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: 0.3s;
+
+                &:hover {
+                    background-color: #9e9e9e;
+                    color: #fff;
+                }
+            }
+
+            &__player::after {
+                content: '';
+                display: inline-block;
+                position: relative;
+                width: 10px;
+                height: 10px;
+                border-radius: 50px;
+                background-color: #32d43a;
+            }
+
+            .my-username::after {
+                background-color: #3278d4;
+            }
+        }
+    }
+
+    .rooms {
+        width: 500px;
+        height: 400px;
+        margin-left: 32px;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: #ebe9e9;
+        display: flex;
+        flex-wrap: wrap;
+        overflow-y: scroll;
+        grid-area: rooms;
+
+        .room {
+            width: 190px;
+            height: 115px;
+            background-color: #6c6c6c;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+
+            &:hover {
+                box-shadow: 0px 1px 6px 5px #437291;
+            }
+
+            &__id {
+                width: 100%;
+                font-size: 18px;
+                
+            }
+        }
+    }
+
+    .buttons {
+        width: 500px;
+        height: 105px;
+        background-color: #ebe9e9;
+        border-radius: 8px;
+        grid-area: buttons;
+        margin-left: 32px;
+        margin-top: 32px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+
+        .search {
+            height: 38px;
+            width: 250px;
+            margin-right: 36px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background-color: #fff;
+            display: flex;
+
+            button {
+                background-color: transparent;
+                border: none;
+            }
+
+            input {
+                width: 100%;
+                border: none;
+                outline: none;
+            }
+        }
+    }

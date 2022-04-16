@@ -26,3 +26,10 @@ export interface shootInterface {
   angle: number;
   power: number;
 }
+
+export interface roomInterface {
+  id: number;
+  players: Array<string>;
+  map?: string;
+  status: 'waiting' | 'playing' | 'finished';
+}

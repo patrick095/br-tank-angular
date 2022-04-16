@@ -1,0 +1,8 @@
+<div class="dashboard">
+    <h2 class="id">Sala {{ room.id }}</h2>
+    <h2>players</h2>
+    <span *ngFor="let player of room.players"> {{ player }}</span>
+    <div class="buttons">
+        <button class="btn btnprimary" (click)="leaveRoom()">Sair</button>
+    </div>
+</div>

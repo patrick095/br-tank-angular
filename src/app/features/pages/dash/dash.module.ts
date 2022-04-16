@@ -5,6 +5,8 @@ import { DashRoutingModule } from './dash.routing.module';
 import { StorageUtils } from 'src/app/core/utils/storage.utils';
 import { GameService } from '../../services/game.service';
 import { RouterModule } from '@angular/router';
+import { HallModule } from 'src/app/core/components/hall/hall.module';
+import { RoomModule } from 'src/app/core/components/room/room.module';
 
 
 
@@ -13,7 +15,7 @@ import { RouterModule } from '@angular/router';
     DashComponent
   ],
   imports: [
-    CommonModule, DashRoutingModule, RouterModule
+    CommonModule, DashRoutingModule, RouterModule, HallModule, RoomModule
   ],
   exports: [
     DashComponent

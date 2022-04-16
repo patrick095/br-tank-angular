@@ -1,1 +1,8 @@
-<p>Players Online: {{ onlinePlayers }}</p>
+<app-hall
+  *ngIf="!joinedRoom"
+  [onlinePlayers]="onlinePlayers"
+  [rooms]="rooms"
+  (createRoom)="createRoom()"
+  (joinRoom)="joinRoom($event)"
+></app-hall>
+<app-room *ngIf="joinedRoom" [room]="joinedRoom" (leave)="leaveRoom()"></app-room>

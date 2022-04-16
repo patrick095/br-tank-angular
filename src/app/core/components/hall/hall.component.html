@@ -1,0 +1,29 @@
+
+<div class="dashboard">
+    <div class="players">
+        <p id="players-online" >Players Online: {{ onlinePlayers.length }}</p>
+        <div class="list">
+            <p *ngFor="let player of onlinePlayers" [ngClass]="['list__player', player === user.username ? 'my-username': '']"> {{ player }} </p>
+        </div>
+    </div>
+
+    <div class="rooms">
+        <p id="salas">Salas</p>
+        <div class="room" *ngFor="let room of rooms" (click)="joinRoom.emit(room.id)">
+            <span class="room__id">Sala: {{ room.id }}</span>
+            <span class="room__players">Jogadores: {{ room.players.length }}/2 </span>
+            <span>{{ room.status }}</span>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <div class="search">
+            <input type="text" placeholder="pesquisar sala">
+            <button>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+        <button class="btn btn-primary mx-2" (click)="createRoom.emit()">Criar Sala</button>
+        <button class="btn btn-primary">Jogar Aleatório</button>
+    </div>
+</div>

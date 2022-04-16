@@ -1,3 +1,13 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: #292929;
+}
+
 #game {
   background-color: #111;
   height: 500px;
@@ -244,4 +254,19 @@ p {
   100% {
     background: #000000;
   }
+}
+
+.dashboard {
+  width: 800px;
+  height: 600px;
+  border: 1px solid #0000005e;
+  padding: 32px;
+  border-radius: 8px;
+  background-color: #6c6c6c;
+  display: grid;
+  grid-template-areas: 
+  "players rooms rooms"
+  "players rooms rooms"
+  "players buttons buttons";
+  position: relative;
 }
