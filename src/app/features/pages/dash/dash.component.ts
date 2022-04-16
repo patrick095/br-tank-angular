@@ -29,7 +29,6 @@ export class DashComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gameService.sendStatusOnline(this.user._id, this.user.username);
     this.gameService.onlinePlayers.subscribe(onlinePlayers => {
       this.onlinePlayers = onlinePlayers;
     });
@@ -41,6 +40,17 @@ export class DashComponent implements OnInit {
         this.joinedRoom = room;
       }
     })
+    this.gameService.getOnlinePlayers();
+    this.verifyIsInRoom();
+    this.listenStartGame();
+  }
+
+  public verifyIsInRoom(): void {
+    this.gameService.verifyIsInRoom(this.user._id).subscribe(room => {
+      if (room) {
+        this.joinedRoom = room;
+      }
+    });
   }
 
   public createRoom(): void {
@@ -49,6 +59,15 @@ export class DashComponent implements OnInit {
 
   public joinRoom(id: number): void {
     this.gameService.joinRoom(this.user._id, id);
+  }
+
+  public listenStartGame(): void {
+    this.gameService.gameStarted.subscribe(game => {
+      if (game && game._id) {
+        this.storage.setStorage('gameStarted', { id: game._id.toString()});
+        this.router.navigate(['/game'], { state: { game: game._id.toString() } });
+      }
+    });
   }
 
   public leaveRoom(): void {

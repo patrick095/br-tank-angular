@@ -1,6 +1,6 @@
 <div
   class="tank"
-  [id]="player.id"
+  [id]="player._id"
   [style]="{
     left: player.position.x + 'px',
     bottom: player.position.y + 'px',
@@ -10,7 +10,7 @@
   <div class="tank-body"></div>
   <div class="tank-turret"></div>
   <div class="tank-gun">
-    <app-gun [game]="game" [angle]="gunAngle"></app-gun>
+    <app-gun [game]="game" [angle]="player.angle"></app-gun>
   </div>
   <div class="cover">
     <div class="wheel-1">

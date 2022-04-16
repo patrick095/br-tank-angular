@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { userInterface } from './core/interfaces/user.interface';
 import { StorageUtils } from './core/utils/storage.utils';
 import { GameService } from './features/services/game.service';
 
@@ -9,7 +10,10 @@ import { GameService } from './features/services/game.service';
 })
 export class AppComponent implements OnInit {
   title = 'br-tank-angular';
-  constructor(private gameService: GameService, private storage: StorageUtils) { }
+  private user: userInterface;
+  constructor(private gameService: GameService, private storage: StorageUtils) {
+    this.user = this.storage.getStorage('user');
+  }
 
   ngOnInit(): void {
     this.gameService.error.subscribe(error => {
@@ -20,6 +24,9 @@ export class AppComponent implements OnInit {
           window.location.href = '/';
         }
       }
-    })
+    });
+    if (this.user) {
+      this.gameService.sendStatusOnline(this.user._id, this.user.username);
+    }
   }
 }

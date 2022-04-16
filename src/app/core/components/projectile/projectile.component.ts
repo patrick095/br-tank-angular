@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Player } from '../../classes/player.class';
 import { GameConfig } from '../../configs/game.config';
 import {
-  GameStartInterface,
+  gameInterface,
   GunShootInterface,
 } from '../../interfaces/game.interface';
 import { positionInterface } from '../../interfaces/player.interface';
@@ -12,7 +13,7 @@ import { positionInterface } from '../../interfaces/player.interface';
   styleUrls: ['./projectile.component.scss'],
 })
 export class ProjectileComponent implements OnInit {
-  @Input() public game: GameStartInterface;
+  @Input() public game: gameInterface;
   public position: positionInterface;
   public gunAngle: number = 0;
   public power: number = 0;
@@ -32,13 +33,16 @@ export class ProjectileComponent implements OnInit {
 
   constructor(private config: GameConfig) {
     this.game = {
-      isMyTurn: false,
       players: [],
       turn: 0,
       wind: {
         angle: 0,
         speed: 0,
       },
+      _id: '',
+      countdown: 0,
+      playerTurn: '',
+      winner: new Player('', 0, ''),
     };
     this.position = {
       x: 0,
@@ -54,19 +58,19 @@ export class ProjectileComponent implements OnInit {
   ngOnInit(): void {}
 
   public fire(gunShoot: GunShootInterface) {
-    const { power, angle, playerPosition, enemyPosition, id, enemyId } =
+    const { power, angle, playerPosition, enemyPosition, enemyId, playerId } =
       gunShoot;
 
     this.position = playerPosition;
     this.enemyPosition = enemyPosition;
-    this.userId = id;
+    this.userId = playerId;
     this.enemyId = enemyId;
     this.angle = (Math.PI * (90 - angle)) / 180;
     this.shooting = true;
 
     this.resetProjectile();
 
-    this.power = 15;
+    this.power = power;
 
     this.calculateWind();
     requestAnimationFrame(this.bothMovement.bind(this));

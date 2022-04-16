@@ -1,8 +1,32 @@
 <div class="dashboard">
-    <h2 class="id">Sala {{ room.id }}</h2>
-    <h2>players</h2>
-    <span *ngFor="let player of room.players"> {{ player }}</span>
+    <h2 id="room-id">Sala {{ room.id }}</h2>
+    <div class="players">
+        <h5>Players na sala</h5>
+        <div class="list">
+            <p [ngClass]="['list__player', player.username === user.username ? 'my-username': '']" *ngFor="let player of room.players"> {{ player.username }}</p>
+        </div>
+    </div>
+
+    <div class="chat">
+        <h5>Chat</h5>
+        <div class="list" #chatList>
+            <div *ngFor="let message of messages" [ngClass]="['message', message.username === user.username ? 'my-message' : '']">
+                <p class="message__text">{{ message.message }}</p>
+                <p class="message__username">{{ message.username }}</p>
+            </div>
+        </div>
+    </div>
+
     <div class="buttons">
-        <button class="btn btnprimary" (click)="leaveRoom()">Sair</button>
+        <form (submit)="sendMessage($event, inputMessage)">
+            <div class="send-message">
+                <input type="text" placeholder="Digite sua mensagem..." #inputMessage>
+                <button type="submit">
+                    <i class="fa-solid fa-circle-arrow-right"></i>
+                </button>
+            </div>
+        </form>
+        <button class="btn btn-danger" (click)="leaveRoom()">Sair</button>
+        <button class="btn btn-primary" (click)="startGameRoom()">Começar Partida</button>
     </div>
 </div>

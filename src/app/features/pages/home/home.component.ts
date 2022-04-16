@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private signinForm: SigninForm,
-    private service: GameService,
+    private gameService: GameService,
     private router: Router,
     private userService: UserService,
     private storage: StorageUtils
@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
     this.userService.signin(this.signinForm.getData())
     .subscribe((user) => {
       if (user) {
+        this.gameService.sendStatusOnline(user._id, user.username);
         this.storage.setStorage('user', user);
         this.router.navigate(['/dash']);
       }

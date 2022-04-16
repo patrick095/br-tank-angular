@@ -1,10 +1,11 @@
 export interface playerInterface {
-    id: string;
+    _id: string;
     name: string;
     position: positionInterface;
     team: number;
     color: string;
     hp: number;
+    angle: number;
 }
 
 export interface positionInterface {

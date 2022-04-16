@@ -167,9 +167,8 @@ p {
   height: 1px;
   width: 11px;
   bottom: 5px;
-  transform: rotate(90deg)
+  transform: rotate(90deg);
 }
-
 
 .gun {
   width: 12px;
@@ -197,6 +196,17 @@ p {
   border-radius: 50px;
   position: absolute;
   display: block;
+}
+
+.instructions {
+  color: #cecece;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  
+  p {
+      color: #cecece;
+  }
 }
 
 .power-bar-container {
@@ -264,9 +274,50 @@ p {
   border-radius: 8px;
   background-color: #6c6c6c;
   display: grid;
-  grid-template-areas: 
-  "players rooms rooms"
-  "players rooms rooms"
-  "players buttons buttons";
+  grid-template-areas:
+    "players rooms rooms"
+    "players rooms rooms"
+    "players buttons buttons";
   position: relative;
+}
+
+.players {
+  height: 540px;
+  width: 200px;
+  padding: 16px;
+  background-color: #ebe9e9;
+  border-radius: 8px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.212);
+  grid-area: players;
+
+  .list {
+    width: 100%;
+
+    &__player {
+      width: 100%;
+      padding: 4px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: #9e9e9e;
+        color: #fff;
+      }
+    }
+
+    &__player::after {
+      content: "";
+      display: inline-block;
+      position: relative;
+      width: 10px;
+      height: 10px;
+      border-radius: 50px;
+      background-color: #32d43a;
+    }
+
+    .my-username::after {
+      background-color: #3278d4;
+    }
+  }
 }

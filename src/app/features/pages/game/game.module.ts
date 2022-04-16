@@ -5,6 +5,8 @@ import { TankModule } from 'src/app/core/components/tank/tank.module';
 import { GameRoutingModule } from './game.routing.module';
 import { GameConfig } from 'src/app/core/configs/game.config';
 import { GameService } from '../../services/game.service';
+import { RouterModule } from '@angular/router';
+import { StorageUtils } from 'src/app/core/utils/storage.utils';
 
 
 
@@ -15,11 +17,12 @@ import { GameService } from '../../services/game.service';
   imports: [
     CommonModule,
     TankModule,
-    GameRoutingModule
+    GameRoutingModule,
+    RouterModule
   ],
   exports: [
     GameComponent
   ],
-  providers: [GameConfig, GameService],
+  providers: [GameConfig, GameService, StorageUtils],
 })
 export class GameModule { }
