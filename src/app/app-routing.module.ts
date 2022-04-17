@@ -16,7 +16,14 @@ const routes: Routes = [
     path: 'dash',
     loadChildren: () =>
       import('./features/pages/dash/dash.module').then((m) => m.DashModule),
-  }
+  },
+  {
+    path: 'cadastrar',
+    loadChildren: () =>
+      import('./features/pages/signup/signup.module').then(
+        (m) => m.SignupModule
+      ),
+  },
 ];
 
 @NgModule({

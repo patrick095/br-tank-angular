@@ -1,1 +1,27 @@
-<p>signup works!</p>
+<div class="signup">
+    <div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <h2>Cadastrar</h2>
+            <div class="mb-3">
+                <label class="form-label" for="user">Nome:</label>
+                <input class="form-control" type="text" placeholder="Nome" name="name" id="name" formControlName="name" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="user">Usuário:</label>
+                <input class="form-control" type="text" placeholder="Usuário" name="username" id="username" formControlName="username" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="user">Email:</label>
+                <input class="form-control" type="text" placeholder="Email" name="email" id="email" formControlName="email" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Senha:</label>
+                <input class="form-control" type="password" placeholder="senha" name="password" id="password" formControlName="password" />
+            </div>
+            <div class="buttons">
+                <a class="btn btn-danger mb-3 mr-3 " routerLink="/">Voltar</a>
+                <button class="btn btn-primary mb-3 ml-3" type="submit">Entrar</button>
+            </div>
+        </form>
+    </div>
+</div>
