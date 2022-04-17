@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  ApiUrl: 'https://br-tank.herokuapp.com'
+  ApiUrl: 'http://159.89.229.210:3000'
 };
