@@ -1,5 +1,6 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import * as p2 from 'p2';
 import { Player } from 'src/app/core/classes/player.class';
 import { TankComponent } from 'src/app/core/components/tank/tank.component';
 import { GameConfig } from 'src/app/core/configs/game.config';
@@ -14,8 +15,9 @@ import { GameService } from '../../services/game.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements AfterViewInit, OnDestroy {
   @ViewChild('myTank') Tank?:TankComponent;
+  @ViewChild('canva', { read: ElementRef }) canvas?: ElementRef<HTMLCanvasElement>;
   public player?: playerInterface;
   public enemy?: playerInterface;
   public maxPower: number;
@@ -26,11 +28,16 @@ export class GameComponent implements OnInit, OnDestroy {
   public power: number;
   public lastShot: number;
   public myTurn: boolean;
-  public gunAngle: number;
   public gameData?: gameInterface;
-  private interval?: number;
   private gameId: string;
   private playerId: string;
+  private world: p2.World;
+  private player1: p2.Body;
+  private player2: p2.Body;
+  private bullet: p2.Body;
+  private bulletShape: p2.Shape;
+  private scale: number;
+  private camera: { x: number, y: number };
 
   @HostListener('document:keydown', ['$event'])
   handleKeyPressEvent(e: KeyboardEvent) {
@@ -51,12 +58,37 @@ export class GameComponent implements OnInit, OnDestroy {
     this.lastShot = 0;
     this.counter = this.config.CountDown;
     this.myTurn = false;
-    this.gunAngle = 0;
     this.gameId = this.storage.getStorage('gameStarted')?.id;
     this.playerId = this.storage.getStorage('user')?.playerId;
+    this.scale = 1;
+    this.camera = { x: 0, y: 0};
+
+    this.world = new p2.World({
+      gravity: [0, -9.82],
+      broadphase: new p2.SAPBroadphase(1),
+    });
+    this.player1 = new p2.Body({
+      mass: 80,
+      position: [90, 0],
+      id: 1,
+      type: p2.Body.KINEMATIC
+    });
+    this.player2 = new p2.Body({
+      mass: 80,
+      position: [670, 0],
+      id: 2,
+      type: p2.Body.KINEMATIC
+    });
+    this.bullet = new p2.Body({
+      mass: 1,
+      position: [0, 0],
+      id: 0
+    });
+    this.bulletShape =  new p2.Circle({ radius: 8 });
+    this.bullet.addShape(this.bulletShape);
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     if (this.gameId) {
       this.server.getGame(this.gameId).subscribe(({ game, players}) => {
         if (game && players) {
@@ -65,11 +97,12 @@ export class GameComponent implements OnInit, OnDestroy {
           this.enemy = players.find((player) => player._id !== this.playerId);
           this.setWind(game.wind.angle, game.wind.speed);
           this.myTurn = this.playerId === game.playerTurn;
+          this.startGame();
         }
       });
       this.updateGame();
     } else {
-      this.router.navigate(['/dash']);
+      // this.router.navigate(['/dash']);
     }
   }
 
@@ -77,9 +110,17 @@ export class GameComponent implements OnInit, OnDestroy {
     this.storage.removeStorage('gameStarted');
   }
 
+  private detectCollision(){
+    this.world.on('beginContact', (event: p2.BeginContactEvent) => {
+      console.log(event)
+      this.bullet.velocity[0] = 0;
+      this.bullet.velocity[1] = 0;
+      this.bullet.removeShape(this.bulletShape);
+    });
+  }
+
   private updateGame(): void {
     this.server.listenGame(this.gameId).subscribe(({ game, players }) => {
-      console.log(game, players)
       const enemy = players?.find((player) => player._id !== this.playerId);
       const myPlayer = players?.find((player) => player._id === this.playerId)
       if (game) {
@@ -109,42 +150,29 @@ export class GameComponent implements OnInit, OnDestroy {
   private setWind(angle: number, speed: number): void {
     this.windAngle = angle;
     this.windSpeed = speed;
+    this.world.gravity[0] = speed / 2 * (angle > 180 ? -1 : 1);
   }
 
-  // private setMyTurn(): void {
-  //   this.myTurn = this.turn % 2 === 0;
-  // }
-
-  // private nextTurn(): void {
-  //   this.turn += 1;
-  //   this.counter = this.config.CountDown;
-  //   this.startTurn();
-  // }
-
-  // private startTurn(): void {
-  //   this.setMyTurn();
-  //   this.interval = window.setInterval(() => {
-  //     this.countDown();
-  //     if (this.counter === 0) {
-  //       clearInterval(this.interval);
-  //       this.nextTurn();
-  //     }
-  //   }, 1000);
-  // }
-
   public keydown(e: KeyboardEvent): void {
-    if (e.code === 'Space' && this.myTurn) {
-      if (this.power < this.maxPower && this.power >= 0) {
-        this.power += 1;
+    if (this.player && this.gameData) {
+      if (e.code === 'Space' && this.myTurn) {
+        if (this.power < this.maxPower && this.power >= 0) {
+          this.power += 1;
+        }
+      } else if (e.code === 'ArrowLeft' && this.myTurn  && this.counter > 0) {
+        this.player1.position[0] -= 1;
+      } else if (e.code === 'ArrowRight' && this.myTurn  && this.counter > 0) {
+        this.player1.position[0] += 1;
+      } else if (e.code === 'ArrowUp') {
+        this.player.angle += 1;
+        this.player1.shapes[1].angle = (Math.PI * this.player.angle) / 180;
+      } else if (e.code === 'ArrowDown') {
+        this.player.angle -= 1;
+        this.player1.shapes[1].angle = (Math.PI * this.player.angle) / 180;
+      } else {
+        return;
       }
-    } else if (e.code === 'ArrowLeft' && this.myTurn  && this.counter > 0) {
-      this.Tank?.moveLeft();
-    } else if (e.code === 'ArrowRight' && this.myTurn  && this.counter > 0) {
-      this.Tank?.moveRight();
-    } else if (e.code === 'ArrowUp') {
-      this.Tank?.upperGunAngle();
-    } else if (e.code === 'ArrowDown') {
-      this.Tank?.lowerGunAngle();
+      this.server.movePlayer(this.player, this.gameData?._id);
     }
   }
 
@@ -152,19 +180,162 @@ export class GameComponent implements OnInit, OnDestroy {
     if (e.code === 'Space' && this.myTurn) {
       this.lastShot = this.power;
       if (this.player && this.gameData) {
-        this.server.shoot({ playerId: this.player?._id, power: this.power, gameId: this.gameData?._id}).subscribe((data) => {
+        this.server.shoot({ playerId: this.player?._id, power: this.power, gameId: this.gameData?._id, angle: this.player.angle }).subscribe((data) => {
           if (data) {
+            console.log(data)
             this.Tank?.Gun?.shoot(data);
             this.power = 0;
-            clearInterval(this.interval);
-            // this.nextTurn();
+            this.shoot(data.angle, data.power);
           }
         });
       }
     }
   }
 
-  // private countDown(): void {
-  //   this.counter > 0 ? (this.counter -= 1) : (this.counter = 0);
-  // }
+  private shoot(angle: number, power: number): void {
+      const calcAngle = (Math.PI * angle) / 180;
+      const forceX = Math.cos(calcAngle) * power;
+      const forceY = Math.sin(calcAngle) * power;
+      this.bullet.addShape(this.bulletShape);
+      this.bullet.position[0] = this.player1.position[0] + 20;
+      this.bullet.position[1] = this.player1.position[1] + 40;
+      this.bullet.velocity[0] = forceX;
+      this.bullet.velocity[1] = forceY > 0 ? forceY : 1;
+      this.power = 0;
+  }
+
+  private addShapes(player1: playerInterface, player2: playerInterface) {
+
+    const player1Shape = new p2.Box({ width: 40, height: 20 });
+    const player1GunShape = new p2.Box({ width: 30, height: 10 });
+    this.player1.addShape(player1Shape);
+    this.player1.addShape(player1GunShape, [5, 10], player1.angle);
+    this.player1.position[0] = player1.position.x;
+    this.player1.position[1] = player1.position.y;
+
+    const player2Shape = new p2.Box({ width: 40, height: 20 });
+    const player2GunShape = new p2.Box({ width: 30, height: 10 });
+    this.player2.addShape(player2Shape);
+    this.player2.addShape(player2GunShape, [5, 10], player2.angle);
+    this.player2.position[0] = player2.position.x;
+    this.player2.position[1] = player2.position.y;
+
+    const groundBody = new p2.Body({ mass: 0, type: p2.Body.STATIC });
+    const groundShape = new p2.Plane();
+    groundBody.addShape(groundShape);
+    
+    this.world.addBody(groundBody);
+    this.world.addBody(this.player1);
+    this.world.addBody(this.player2);
+    this.world.addBody(this.bullet);
+  }
+
+  private startGame(){ 
+    const canvas = this.canvas?.nativeElement;
+    if (this.player && this.enemy) {
+      this.addShapes(this.player, this.enemy);
+      this.detectCollision();
+    }
+    if (canvas) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const ctx = canvas.getContext('2d');
+
+      if (ctx) ctx.lineWidth = 0.05;
+      
+      const timeStep = 1 / 20; // seconds
+      setInterval(() =>{
+        this.world.step(timeStep);
+        
+        if (ctx) this.render(ctx,w, h);
+      }, 100 * (1 / 60));
+    }
+
+  }
+
+  private render(ctx: CanvasRenderingContext2D,w: number, h: number) {
+    const scaleX = this.scale;
+    const scaleY = -this.scale;
+    
+    // Clear the canvas
+    ctx.clearRect(0, 0, w, h);
+  
+    // Transform the canvas
+    ctx.save();
+    ctx.translate(this.camera.x + 0, this.camera.y + h);
+    ctx.scale(scaleX, scaleY);
+  
+    // Draw all bodies
+    for (var i = 0; i < this.world.bodies.length; i++) {
+      var body = this.world.bodies[i];
+      for (var j = 0; j < body.shapes.length; j++) {
+        var shape = body.shapes[j];
+        const isGun = j > 0;
+        var color = isGun ? '#ff0000' : '#000000';
+  
+        if(shape instanceof p2.Box) this.drawBox(ctx, body, shape, color, isGun);
+        else if(shape instanceof p2.Circle) this.drawCircle(ctx, body, shape);
+        else if(shape instanceof p2.Plane) this.drawPlane(ctx, body, shape);
+      }
+    }
+    
+    ctx.beginPath();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  private drawCircle(ctx: CanvasRenderingContext2D, body: p2.Body, shape: any) {
+    var x = body.position[0],
+      y = body.position[1];
+  
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.rotate(body.angle);
+    ctx.arc(0, 0, shape.radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.lineTo(0, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  private drawPlane(ctx: CanvasRenderingContext2D, body: p2.Body, shape: any) {
+    const x = body.position[0];
+    const y = body.position[1];
+    const length = 800;
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.rotate(body.angle);
+    ctx.moveTo(-length, 0);
+    ctx.lineTo(length, 0);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -0.5);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  private drawBox(ctx: CanvasRenderingContext2D, body: p2.Body, shape: any, color = '#f00', isGun = false) {
+    var x = isGun ? shape.position[0] + body.position[0] : body.position[0],
+      y = isGun ? shape.position[1] + body.position[1] : body.position[1];
+  
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.rotate(shape.angle);
+    ctx.rect(
+      -shape.width / (isGun ? 4 : 2),
+      -shape.height / (isGun ? 8 : 4),
+      shape.width,
+      shape.height
+    );
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(shape.width / 2, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
 }

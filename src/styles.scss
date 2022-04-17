@@ -30,12 +30,14 @@ body {
 
 #wind-pic {
   background: teal;
-  bottom: 400px;
-  left: 420px;
-  height: 80px;
-  width: 100px;
-  position: absolute;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  margin-left: 8px;
+  border-radius: 16px;
 }
 
 #wind-arrow {
@@ -44,9 +46,6 @@ body {
   justify-content: center;
   align-items: center;
   display: flex;
-  left: 27px;
-  bottom: 15px;
-  position: absolute;
 }
 
 #wind-arrow-tip {
@@ -70,30 +69,26 @@ body {
 }
 
 .angle {
-  left: 350px;
-  bottom: 300px;
-  height: 20px;
   width: 100px;
-  background: white;
-  position: absolute;
+  background: #000;
+  padding: 4px;
+  border-radius: 8px;
+  margin-left: 8px;
 }
 
 .result {
   background: blue;
-  bottom: 270px;
-  left: 350px;
-  position: absolute;
-  height: 20px;
-  width: 100px;
+  width: 150px;
+  padding: 4px;
+  border-radius: 8px;
+  margin-left: 8px;
 }
 
 .timer {
-  background: white;
-  bottom: 240px;
-  left: 350px;
-  position: absolute;
-  height: 20px;
-  width: 100px;
+  background: #000;
+  padding: 8px;
+  border-radius: 8px;
+  margin-left: 8px;
 }
 
 p {

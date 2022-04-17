@@ -40,6 +40,7 @@ export interface shootInterface {
   playerId: string;
   gameId: string;
   power: number;
+  angle: number
 }
 
 export interface roomInterface {
