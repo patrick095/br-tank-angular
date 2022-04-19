@@ -44,6 +44,10 @@ export class GameService {
     return this.socketIo.fromEvent<getGameInterface>(`game-${id}`);
   }
 
+  public listenShoot(gameId: string): Observable<shootInterface> {
+    return this.socketIo.fromEvent<shootInterface>(`shoot-${gameId}`);
+  }
+
   public movePlayer(player: playerInterface, gameId: string): void {
     this.socket.emit('movePlayer', { player, gameId });
   }

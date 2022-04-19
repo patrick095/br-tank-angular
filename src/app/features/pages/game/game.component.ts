@@ -38,6 +38,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   private bulletShape: p2.Shape;
   private scale: number;
   private camera: { x: number, y: number };
+  private frameRate = 1000 / 60;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyPressEvent(e: KeyboardEvent) {
@@ -81,7 +82,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     });
     this.bullet = new p2.Body({
       mass: 1,
-      position: [0, 0],
+      position: [100, 200],
       id: 0
     });
     this.bulletShape =  new p2.Circle({ radius: 8 });
@@ -95,6 +96,10 @@ export class GameComponent implements AfterViewInit, OnDestroy {
           this.gameData = game;
           this.player = players.find((player) => player._id === this.playerId);
           this.enemy = players.find((player) => player._id !== this.playerId);
+          if (this.player && this.enemy) {
+            this.player1.position[0] = this.player?.position.x;
+            this.player2.position[0] = this.enemy?.position.x;
+          }
           this.setWind(game.wind.angle, game.wind.speed);
           this.myTurn = this.playerId === game.playerTurn;
           this.startGame();
@@ -102,7 +107,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
       });
       this.updateGame();
     } else {
-      // this.router.navigate(['/dash']);
+      this.router.navigate(['/dash']);
     }
   }
 
@@ -121,8 +126,9 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
   private updateGame(): void {
     this.server.listenGame(this.gameId).subscribe(({ game, players }) => {
-      const enemy = players?.find((player) => player._id !== this.playerId);
-      const myPlayer = players?.find((player) => player._id === this.playerId)
+      
+      const enemy = players?.find((player) => player._id === this.enemy?._id);
+      const myPlayer = players?.find((player) => player._id === this.player?._id);
       if (game) {
         this.gameData = game;
         this.setWind(game.wind.angle, game.wind.speed);
@@ -137,8 +143,17 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         }
       }
       if (enemy && this.enemy) {
-        this.enemy.position = enemy.position;
-        this.enemy.angle = enemy.angle;
+        this.player2.position[0] = enemy.position.x;
+        this.player2.position[1] = enemy.position.y;
+        this.player2.shapes[1].angle = (Math.PI * enemy.angle) / 180;
+        this.enemy = enemy;
+      }
+    });
+    this.server.listenShoot(this.gameId).subscribe((data) => {
+      if (data.playerId === this.player?._id) {
+        this.shoot(data.angle, data.power, this.player1);
+      } else if (data.playerId === this.enemy?._id) {
+        this.shoot(data.angle, data.power, this.player2);
       }
     });
   }
@@ -159,6 +174,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         if (this.power < this.maxPower && this.power >= 0) {
           this.power += 1;
         }
+        return;
       } else if (e.code === 'ArrowLeft' && this.myTurn  && this.counter > 0) {
         this.player1.position[0] -= 1;
       } else if (e.code === 'ArrowRight' && this.myTurn  && this.counter > 0) {
@@ -180,25 +196,19 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     if (e.code === 'Space' && this.myTurn) {
       this.lastShot = this.power;
       if (this.player && this.gameData) {
-        this.server.shoot({ playerId: this.player?._id, power: this.power, gameId: this.gameData?._id, angle: this.player.angle }).subscribe((data) => {
-          if (data) {
-            console.log(data)
-            this.Tank?.Gun?.shoot(data);
-            this.power = 0;
-            this.shoot(data.angle, data.power);
-          }
-        });
+        this.server.shoot({ playerId: this.player?._id, power: this.power, gameId: this.gameData?._id, angle: this.player.angle });
       }
     }
   }
 
-  private shoot(angle: number, power: number): void {
+  private shoot(angle: number, power: number, player: p2.Body): void {
       const calcAngle = (Math.PI * angle) / 180;
       const forceX = Math.cos(calcAngle) * power;
       const forceY = Math.sin(calcAngle) * power;
+      console.log(angle, power, player.position[0], player.position[1]);
       this.bullet.addShape(this.bulletShape);
-      this.bullet.position[0] = this.player1.position[0] + 20;
-      this.bullet.position[1] = this.player1.position[1] + 40;
+      this.bullet.position[0] = player.position[0] + 20;
+      this.bullet.position[1] = player.position[1] + 40;
       this.bullet.velocity[0] = forceX;
       this.bullet.velocity[1] = forceY > 0 ? forceY : 1;
       this.power = 0;
@@ -243,12 +253,10 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
       if (ctx) ctx.lineWidth = 0.05;
       
-      const timeStep = 1 / 20; // seconds
       setInterval(() =>{
-        this.world.step(timeStep);
-        
+        this.world.step(10 * 1 / 60, undefined, 3);
         if (ctx) this.render(ctx,w, h);
-      }, 100 * (1 / 60));
+      }, this.frameRate);
     }
 
   }
