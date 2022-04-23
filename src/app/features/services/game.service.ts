@@ -86,15 +86,23 @@ export class GameService {
     return this.socketIo.fromEvent<GunShootInterface | null>('shoot');
   }
 
+  public hitBullet(gameId: string, playerId: string, damage: number): void {
+    this.socket.emit('hitBullet', { gameId, playerId, damage });
+  }
+
   public newGame(user: string): Observable<any> {
     return this.http.get(`${this.url}/find-game?player=${user}`);
   }
 
   public joinRoom(userId: string, roomId: number) {
-    this.socket.emit('joinRoom', {userId, roomId});
+    this.socket.emit('joinRoom', { userId, roomId });
   }
 
   public leaveRoom(userId: string, roomId: number) {
-    this.socket.emit('leaveRoom', {userId, roomId});
+    this.socket.emit('leaveRoom', { userId, roomId });
+  }
+
+  public leaveGame(userId: string, gameId: string) {
+    this.socket.emit('leaveGame', { userId, gameId })
   }
 }

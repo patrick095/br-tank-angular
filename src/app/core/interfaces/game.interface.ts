@@ -15,6 +15,7 @@ export interface gameInterface {
   turn: number;
   winner: playerInterface;
   countdown: number;
+  status: 'playning' | 'finished';
 }
 
 export interface getGameInterface {

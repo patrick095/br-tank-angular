@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import * as p2 from 'p2';
+import { Subscription } from 'rxjs';
 import { Player } from 'src/app/core/classes/player.class';
 import { TankComponent } from 'src/app/core/components/tank/tank.component';
 import { GameConfig } from 'src/app/core/configs/game.config';
@@ -39,6 +40,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   private scale: number;
   private camera: { x: number, y: number };
   private frameRate = 1000 / 60;
+  private listenGameSubscription?: Subscription;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyPressEvent(e: KeyboardEvent) {
@@ -82,7 +84,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     });
     this.bullet = new p2.Body({
       mass: 1,
-      position: [100, 200],
+      position: [0, 0],
       id: 0
     });
     this.bulletShape =  new p2.Circle({ radius: 8 });
@@ -113,19 +115,31 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.storage.removeStorage('gameStarted');
+    this.exit();
   }
 
   private detectCollision(){
     this.world.on('beginContact', (event: p2.BeginContactEvent) => {
-      console.log(event)
+      console.log(event.bodyA.id, event.bodyB.id);
       this.bullet.velocity[0] = 0;
       this.bullet.velocity[1] = 0;
       this.bullet.removeShape(this.bulletShape);
+      this.hit(event.bodyA, event.bodyB);
     });
   }
 
+  private hit(body: p2.Body, bullet: p2.Body): void {
+    if (body.id === 1 && bullet.id === 0 && this.gameData && this.player) {
+      this.server.hitBullet(this.gameData?._id, this.player?._id, 10);
+      alert(this.player?.name + ' foi acertado!');
+    } else if (body.id === 2 && bullet.id === 0 && this.gameData && this.enemy) {
+      this.server.hitBullet(this.gameData?._id, this.enemy?._id, 10);
+      alert(this.enemy?.name + ' foi acertado!');
+    }
+  }
+
   private updateGame(): void {
-    this.server.listenGame(this.gameId).subscribe(({ game, players }) => {
+    this.listenGameSubscription = this.server.listenGame(this.gameId).subscribe(({ game, players }) => {
       
       const enemy = players?.find((player) => player._id === this.enemy?._id);
       const myPlayer = players?.find((player) => player._id === this.player?._id);
@@ -134,13 +148,14 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         this.setWind(game.wind.angle, game.wind.speed);
         this.myTurn = this.playerId === game.playerTurn;
         this.counter = game.countdown;
-        if (players && myPlayer) {
-          this.player = myPlayer;
-        }
         if (this.gameData.winner) {
           confirm('Fim de jogo, o vencedor é "' + this.gameData.winner.name + '"');
+          this.listenGameSubscription?.unsubscribe();
           this.router.navigate(['/dash']);
         }
+      }
+      if (this.player && myPlayer) {
+        this.player.hp = myPlayer.hp;
       }
       if (enemy && this.enemy) {
         this.player2.position[0] = enemy.position.x;
@@ -159,6 +174,10 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   }
 
   public exit() {
+    if (this.player && this.gameData && this.gameData.status === 'playning') {
+      this.server.leaveGame(this.player?._id, this.gameData?._id);
+    }
+    this.listenGameSubscription?.unsubscribe();
     this.router.navigate(['/dash']);
   }
 
@@ -222,6 +241,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     this.player1.addShape(player1GunShape, [5, 10], player1.angle);
     this.player1.position[0] = player1.position.x;
     this.player1.position[1] = player1.position.y;
+    this.player1.id = 1;
 
     const player2Shape = new p2.Box({ width: 40, height: 20 });
     const player2GunShape = new p2.Box({ width: 30, height: 10 });
@@ -229,10 +249,13 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     this.player2.addShape(player2GunShape, [5, 10], player2.angle);
     this.player2.position[0] = player2.position.x;
     this.player2.position[1] = player2.position.y;
+    this.player2.id = 2;
 
     const groundBody = new p2.Body({ mass: 0, type: p2.Body.STATIC });
     const groundShape = new p2.Plane();
     groundBody.addShape(groundShape);
+    groundBody.id = 10;
+    this.bullet.id = 0;
     
     this.world.addBody(groundBody);
     this.world.addBody(this.player1);

@@ -80,6 +80,7 @@
 </div> -->
 <div class="game">
   <div class="d-flex">
+    <p>{{ player?.name }} - HP: {{ player?.hp }}</p>
     <p class="timer">
       Timer {{ counter }}
     </p>
@@ -102,6 +103,7 @@
       </div>
     </div>
     <p class="timer">Velocidade do vento: {{ windSpeed }}</p>
+    <p>{{ enemy?.name }} - HP: {{ enemy?.hp }}</p>
   </div>
   <canvas #canva width="800" height="600" id="myCanvas" style="border: 2px solid #cecece; border-radius: 8px;"></canvas>
   <div class="power-bar-container">

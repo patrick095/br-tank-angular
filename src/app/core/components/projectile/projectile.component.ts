@@ -43,6 +43,7 @@ export class ProjectileComponent implements OnInit {
       countdown: 0,
       playerTurn: '',
       winner: new Player('', 0, ''),
+      status: 'playning',
     };
     this.position = {
       x: 0,
