@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameComponent } from './game.component';
-import { TankModule } from 'src/app/core/components/tank/tank.module';
 import { GameRoutingModule } from './game.routing.module';
 import { GameConfig } from 'src/app/core/configs/game.config';
 import { GameService } from '../../services/game.service';
@@ -16,7 +15,6 @@ import { StorageUtils } from 'src/app/core/utils/storage.utils';
   ],
   imports: [
     CommonModule,
-    TankModule,
     GameRoutingModule,
     RouterModule
   ],

@@ -4,20 +4,13 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
-  OnInit,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import * as p2 from 'p2';
 import { Subscription } from 'rxjs';
-import { Player } from 'src/app/core/classes/player.class';
-import { TankComponent } from 'src/app/core/components/tank/tank.component';
 import { GameConfig } from 'src/app/core/configs/game.config';
-import { WindEnum } from 'src/app/core/enums/wind.enum';
-import {
-  gameInterface,
-  GameStartInterface,
-} from 'src/app/core/interfaces/game.interface';
+import { gameInterface } from 'src/app/core/interfaces/game.interface';
 import { playerInterface } from 'src/app/core/interfaces/player.interface';
 import { StorageUtils } from 'src/app/core/utils/storage.utils';
 import { GameService } from '../../services/game.service';
@@ -28,7 +21,6 @@ import { GameService } from '../../services/game.service';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('myTank') Tank?: TankComponent;
   @ViewChild('canva', { read: ElementRef })
   canvas?: ElementRef<HTMLCanvasElement>;
   public player?: playerInterface;
