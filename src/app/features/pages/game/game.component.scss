@@ -4,3 +4,77 @@
     color: #cecece;
 }
 
+.game-container {
+    width: 800px;
+    height: 600px;
+    position: relative;
+    border: 2px solid #cecece;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .wind {
+        position: absolute;
+        top: 10px;
+        left: 365px;
+        width: 70px;
+        height: 70px;
+        background-color: #cecece;
+        border-radius: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &__speed {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-weight: 600;
+            font-size: 20px;
+        }
+    }
+
+    .turn {
+        position: absolute;
+        top: 90px;
+        left: 310px;
+        width: 160px;
+        height: 70px;
+
+        &__text {
+            position: absolute;
+            top: 40px;
+            left: 55px;
+            font-weight: 600;
+            font-size: 20px;
+            text-shadow: 2px 2px 3px #000;
+        }
+
+        &__countdown {
+            position: absolute;
+            top: 65px;
+            left: 80px;
+            font-weight: 600;
+            font-size: 20px;
+            text-shadow: 2px 2px 3px #000;
+        }
+    }
+
+    .player {
+        position: absolute;
+        margin-bottom: 35px;
+
+        &__hp-bg {
+            width: 60px;
+            height: 3px;
+            border: 1px solid #17af30;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        &__hp-fill {
+            background-color: #17af30;
+            height: 3px;
+            width: 1px;
+        }
+    }
+}

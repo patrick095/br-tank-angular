@@ -13,7 +13,7 @@ export interface gameInterface {
   players: Array<string>;
   playerTurn: string;
   turn: number;
-  winner: playerInterface;
+  winner?: playerInterface;
   countdown: number;
   status: 'playning' | 'finished';
 }

@@ -1,114 +1,46 @@
-<!-- <div
-  class="game"
-  tabindex="0"
-  *ngIf="player"
->
-  <div id="game">
-    <div id="timer">
-      <p class="timer">
-        {{ counter }}
-      </p>
-    </div>
-    <div id="wind">
-      <p>Vento</p>
-      <p class="wind-speed">{{ windSpeed }}</p>
-    </div>
-    <div id="wind-pic">
-      <div id="wind-arrow">
-        <img
-          src="/assets/seta-vento.png"
-          alt="vento"
-          width="25px"
-          height="50px"
-          [style]="{ transform: 'rotate(' + windAngle + 'deg)' }"
-        />
-        <div id="wind-arrow-tip"></div>
-      </div>
-    </div>
-    <div id="status">
-      <p class="player"></p>
-    </div>
-    <div id="player-1-status">
-      <p class="name">{{ player?.name }}</p>
-      <p id="tank-1-health"></p>
-    </div>
-    <div id="player-2-status">
-      <p class="name">{{ enemy?.name }}</p>
-      <p id="tank-2-health"></p>
-    </div>
-    <div id="result">
-      <p class="result">
-        {{ myTurn ? 'Sua vez' : 'Vez do adversário' }}
-      </p>
-    </div>
-    <div id="angle">
-      <p class="angle">{{ gunAngle }}</p>
-    </div>
-    <app-tank
-        *ngIf="player"
-        [player]="player"
-        [game]="gameData"
-        (angle)="gunAngle = $event"
-        #myTank
-    ></app-tank>
-    <app-tank
-        *ngIf="enemy"
-        [player]="enemy"
-        [game]="gameData"
-        (angle)="gunAngle = $event"
-    ></app-tank>
-  </div>
-  <div class="power-bar-container">
-    <div class="power-bar">
-      <h5>Press Spacebar to increment power</h5>
-      <div class="power-bar-fill" [style]="{ width: (this.power*100)/this.maxPower + '%' }"></div>
-      <div class="power-bar-lats-shoot" [style]="{ left: (this.lastShot*100)/this.maxPower + '%' }"></div>
-    </div>
-  </div>
-</div>
-<div class="align-center">
-  <button class="btn btn-danger" (click)="exit()">Desistir</button>
-  <div class="instructions">
-    <p>Left and Right Arrow Keys: Move your tank left and right</p>
-    <p>Up and Down Arrow Keys: Move your tank&apos;s gun angle</p>
-    <p>Space Bar: Shoot your gun</p>
-    <p>
-      Objective: Hit your opponent&apos;s tank to deplete his HP before your
-      opponent does it first!
-    </p>
-  </div>
-</div> -->
 <div class="game">
-  <div class="d-flex">
-    <p>{{ player?.name }} - HP: {{ player?.hp }}</p>
-    <p class="timer">
-      Timer {{ counter }}
-    </p>
-    <div id="angle">
-      <p class="angle">Angulo: {{ player?.angle }}</p>
-    </div>
-    <p class="result">
-      {{ myTurn ? 'Sua vez' : 'Vez do adversário' }}
-    </p>
-    <div id="wind-pic">
-      <div id="wind-arrow">
-        <img
+  <div class="game-container">
+    <div class="wind">
+      <img
           src="/assets/seta-vento.png"
           alt="vento"
-          width="25px"
+          width="50px"
           height="50px"
           [style]="{ transform: 'rotate(' + (windAngle > 180 ? 270 : 90) + 'deg)' }"
         />
-        <div id="wind-arrow-tip"></div>
+        <p class="wind__speed">{{ windSpeed ? windSpeed.toFixed(1) : '0.0' }}</p>
+    </div>
+    <div class="turn" *ngIf="myTurn">
+      <img
+          src="/assets/turn-bubble.png"
+          alt="vento"
+          width="180px"
+          height="140px"
+        />
+        <span class="turn__text">Sua Vez!!</span>
+        <span class="turn__countdown" [style]="{ color: counter > 3 ? '#ffffff' : '#ff0000' }">{{ counter < 10 ? '0' + counter : counter }}</span>
+    </div>
+    <div class="player" *ngIf="player" [ngStyle]="{ bottom: player.position.y + 'px', left: player.position.x - 20 + 'px' }">
+      <span class="player__name">
+        {{ player.name }}
+      </span>
+      <div class="player__hp-bg">
+        <div class="player__hp-fill" [style]="{ width: player.hp + '%' }"></div>
       </div>
     </div>
-    <p class="timer">Velocidade do vento: {{ windSpeed }}</p>
-    <p>{{ enemy?.name }} - HP: {{ enemy?.hp }}</p>
+    <div class="player" *ngIf="enemy" [ngStyle]="{ bottom: enemy.position.y + 'px', left: enemy.position.x - 20 + 'px' }">
+      <span class="player__name">
+        {{ enemy.name }}
+      </span>
+      <div class="player__hp-bg">
+        <div class="player__hp-fill" [style]="{ width: enemy.hp + '%' }"></div>
+      </div>
+    </div>
+    <canvas #canva width="800" height="600" id="myCanvas"></canvas>
   </div>
-  <canvas #canva width="800" height="600" id="myCanvas" style="border: 2px solid #cecece; border-radius: 8px;"></canvas>
   <div class="power-bar-container">
     <div class="power-bar">
-      <h5>Press Spacebar to increment power</h5>
+      <h5>Aperte e segure para atirar!</h5>
       <div class="power-bar-fill" [style]="{ width: (this.power*100)/this.maxPower + '%' }"></div>
       <div class="power-bar-lats-shoot" [style]="{ left: (this.lastShot*100)/this.maxPower + '%' }"></div>
     </div>
